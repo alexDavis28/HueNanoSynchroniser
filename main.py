@@ -34,9 +34,15 @@ def sync_lights(nanoleaf: Nanoleaf, bridge: Bridge, config_data: dict):
     nanoleaf.set_color(rgb)
 
     bri = bridge.get_group(config_data["pHueGroup"], "bri")
-    bri_percent = (int((bri / 255) * 100))
+    bri_percent = (int((bri / 255) * 100)) if bri < 179 else 70
     print(bri, bri_percent)
-    print(nanoleaf.set_brightness(bri_percent, 1))
+    nanoleaf.set_brightness(bri_percent, 1)
+
+
+def sync_to_colour(nanoleaf: Nanoleaf, bridge: Bridge, config_data: dict, r: int = 0, g: int = 0, b: int = 0):
+    xy = c.rgb_to_xy(r, g, b)
+    bridge.set_group(config_data["pHueGroup"], "xy", xy)
+    nanoleaf.set_color((r, g, b))
 
 
 if __name__ == '__main__':
